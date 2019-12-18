@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Chartisan example</title>
+        <link
+            href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            html,
+            body {
+                height: 100%;
+                width: 100%;
+                font-family: 'Varela Round', sans-serif;
+            }
+            .chart {
+                height: 18rem;
+            }
+        </style>
+    </head>
+    <body class="bg-gray-200">
+        <div class="container mx-auto my-6">
+            <div class="bg-white rounded shadow-md p-6">
+                <div id="chart1" class="chart"></div>
+            </div>
+            <div class="mt-4 bg-white rounded shadow-md p-6">
+                <div id="chart2" class="chart"></div>
+            </div>
+            <div
+                class="text-center mt-6 uppercase font-bold text-xs text-gray-400 tracking-widest"
+            >
+                Copyright &copy; 2020 &mdash; Èrik Campobadal Forés
+            </div>
+        </div>
+        <script src="./dist/chartisan_chartjs.js"></script>
+        <script>
+            const chart1 = new Chartisan({
+                el: '#chart1',
+                url: 'http://127.0.0.1:9000'
+            })
+            const chart2 = new Chartisan({
+                el: '#chart2',
+                url: 'http://127.0.0.1:9000/invalid'
+            })
+        </script>
+    </body>
+</html>

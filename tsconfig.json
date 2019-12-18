@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "es6",
+        "lib": ["es5", "dom"],
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "removeComments": true,
+        "moduleResolution": "node",
+        "strict": true,
+        "baseUrl": "./src",
+        "esModuleInterop": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "forceConsistentCasingInFileNames": true
+    }
+}

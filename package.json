@@ -1,0 +1,32 @@
+{
+    "name": "@chartisan/chartjs",
+    "version": "1.0.0",
+    "description": "The next generation charting experience",
+    "main": "dist/chartisan.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/chartisan/chartjs.git"
+    },
+    "scripts": {
+        "dev": "rollup -c --environment BUILD:dev",
+        "build": "rollup -c --environment BUILD:production",
+        "watch": "rollup -c --environment BUILD:production --watch"
+    },
+    "keywords": [],
+    "author": "Èrik Campobadal Forés <soc@erik.cat>",
+    "license": "MIT",
+    "devDependencies": {
+        "@chartisan/chartisan": "file:../chartisan",
+        "rollup": "^1.27.13",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-gzip": "^2.2.0",
+        "@rollup/plugin-node-resolve": "^6.0.0",
+        "rollup-plugin-terser": "^5.1.3",
+        "@wessberg/rollup-plugin-ts": "^1.1.83",
+        "typescript": "^3.7.3"
+    },
+    "dependencies": {
+        "@types/chart.js": "^2.9.5",
+        "chart.js": "^2.9.3"
+    }
+}
