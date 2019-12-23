@@ -39,11 +39,29 @@
                 Copyright &copy; 2020 &mdash; Èrik Campobadal Forés
             </div>
         </div>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+            integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI="
+            crossorigin="anonymous"
+        ></script>
         <script src="./dist/chartisan_chartjs.js"></script>
         <script>
             const chart1 = new Chartisan({
                 el: '#chart1',
-                url: 'http://127.0.0.1:9000'
+                url: 'http://127.0.0.1:9000',
+                hooks: [
+                    Chartisan.hooks.palette(),
+                    Chartisan.hooks.responsive(),
+                    Chartisan.hooks.beginAtZero(),
+                    Chartisan.hooks.legend({ position: 'bottom' }),
+                    Chartisan.hooks.title(
+                        'This is a sample chart using chartisan!'
+                    ),
+                    Chartisan.hooks.datasets([
+                        { type: 'line', fill: false },
+                        'bar'
+                    ])
+                ]
             })
             const chart2 = new Chartisan({
                 el: '#chart2',

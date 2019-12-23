@@ -1,5 +1,22 @@
-import '@chartisan/chartisan/dist/style.css'
-import { ChartisanOptions, isChartisan, Chartisan } from '@chartisan/chartisan'
+import '@chartisan/chartisan/style.css'
+import Chart, { ChartConfiguration } from 'chart.js'
+import {
+    Title,
+    Legend,
+    Padding,
+    Palette,
+    Datasets,
+    Minimalist,
+    Responsive,
+    BeginAtZero,
+    DisplayAxes
+} from './hooks'
+import {
+    ServerData,
+    isChartisan,
+    ChartisanOptions,
+    Chartisan as Base
+} from '@chartisan/chartisan'
 
 /**
  * Base chart class for ChartJS.
@@ -8,7 +25,25 @@ import { ChartisanOptions, isChartisan, Chartisan } from '@chartisan/chartisan'
  * @class Chart
  * @extends {Base}
  */
-export class Chart extends Chartisan {
+export class Chartisan extends Base<ChartConfiguration> {
+    /**
+     * Stores the chartisan hooks for chart.js
+     *
+     * @static
+     * @memberof Chartisan
+     */
+    static hooks = {
+        title: Title,
+        legend: Legend,
+        padding: Padding,
+        palette: Palette,
+        datasets: Datasets,
+        minimalist: Minimalist,
+        responsive: Responsive,
+        beginAtZero: BeginAtZero,
+        displayAxes: DisplayAxes
+    }
+
     /**
      * The chart canvas.
      *
@@ -18,25 +53,61 @@ export class Chart extends Chartisan {
     canvas: HTMLCanvasElement
 
     /**
+     * Stores the chart instance.
+     *
+     * @type {Chart}
+     * @memberof Chartisan
+     */
+    chart?: Chart
+
+    /**
      * Creates an instance of Chartisan.
      *
      * @param {ChartisanOptions} options
      * @memberof Chartisan
      */
-    constructor(options: ChartisanOptions) {
+    constructor(options: ChartisanOptions<ChartConfiguration>) {
         super(options)
         this.canvas = document.createElement('canvas')
-        // this.controller.appendChild(this.canvas)
+        this.canvas.style.width = '100%'
+        this.canvas.style.height = '100%'
     }
 
     /**
-     * Runs when the chart gets updated.
+     * Formats the data of the request to match the data that
+     * the chart needs (acording to the desired front-end).
      *
      * @protected
+     * @param {ServerData} response
+     * @returns {ChartConfiguration}
      * @memberof Chartisan
      */
-    protected onUpdate(response: JSON) {
-        console.log(response)
+    protected formatData(response: ServerData): ChartConfiguration {
+        return {
+            type: 'bar',
+            data: {
+                labels: response.chart.labels,
+                datasets: response.datasets.map(dataset => ({
+                    label: dataset.name,
+                    data: dataset.values
+                }))
+            },
+            options: {}
+        }
+    }
+
+    /**
+     * Handles a successfull response of the chart data.
+     *
+     * @protected
+     * @param {ChartConfiguration} data
+     * @memberof Chartisan
+     */
+    protected onUpdate(data: ChartConfiguration) {
+        console.log(data)
+        this.controller.appendChild(this.canvas)
+        this.chart = new Chart(this.canvas, data)
+        console.log('Chart created...')
     }
 }
 
@@ -54,8 +125,8 @@ declare global {
          * @type {isChartisan}
          * @memberof Window
          */
-        Chartisan: isChartisan
+        Chartisan: isChartisan<ChartConfiguration>
     }
 }
 
-window.Chartisan = Chart
+window.Chartisan = Chartisan

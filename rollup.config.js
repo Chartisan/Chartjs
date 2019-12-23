@@ -1,27 +1,41 @@
 import gzip from 'rollup-plugin-gzip'
 import postcss from 'rollup-plugin-postcss'
-import ts from '@wessberg/rollup-plugin-ts'
+// import ts from '@wessberg/rollup-plugin-ts'
 import { terser } from 'rollup-plugin-terser'
+import commonjs from 'rollup-plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import { name, dependencies, peerDependencies } from './package.json'
+import { name, peerDependencies } from './package.json'
+// import typescript from '@rollup/plugin-typescript'
+import babel from 'rollup-plugin-babel'
+// import typescript from 'rollup-plugin-typescript2'
+import { DEFAULT_EXTENSIONS } from '@babel/core'
 
 const pkg_name = name.substr(1).replace('/', '_')
+const extensions = [...DEFAULT_EXTENSIONS, '.ts', '.tsx']
 
 export default {
     input: 'src/index.ts',
-    output: {
-        file: `dist/${pkg_name}.js`,
-        format: 'iife',
-        name: pkg_name
-    },
+    output: [
+        {
+            file: `dist/${pkg_name}.js`,
+            format: 'iife',
+            name: `${pkg_name}`,
+            globals: {
+                'chart.js': 'Chart'
+            }
+        }
+    ],
     external: [
-        ...Object.keys(dependencies || {}),
+        // ...Object.keys(dependencies || {}),
+        'chart.js',
         ...Object.keys(peerDependencies || {})
     ],
     plugins: [
         postcss(),
-        ts({ transpiler: 'babel' }),
-        resolve(),
+        resolve({ extensions }),
+        commonjs({ include: 'node_modules/**' }),
+        // typescript({ tsconfig: 'tsconfig.json' }),
+        babel({ extensions, include: ['src/**/*'] }),
         ...(process.env.BUILD === 'production' ? [terser(), gzip()] : [])
     ],
     onwarn(warning) {

@@ -1,18 +1,20 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "module": "es6",
+        "target": "es5",
         "lib": ["es5", "dom"],
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "removeComments": true,
+        "allowJs": true,
         "moduleResolution": "node",
-        "strict": true,
-        "baseUrl": "./src",
-        "esModuleInterop": true,
         "declaration": true,
+        "emitDeclarationOnly": true,
+        "declarationDir": "dist/types",
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "strict": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "forceConsistentCasingInFileNames": true
-    }
+        "forceConsistentCasingInFileNames": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
 }
