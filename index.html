@@ -49,19 +49,13 @@
             const chart1 = new Chartisan({
                 el: '#chart1',
                 url: 'http://127.0.0.1:9000',
-                hooks: [
-                    Chartisan.hooks.palette(),
-                    Chartisan.hooks.responsive(),
-                    Chartisan.hooks.beginAtZero(),
-                    Chartisan.hooks.legend({ position: 'bottom' }),
-                    Chartisan.hooks.title(
-                        'This is a sample chart using chartisan!'
-                    ),
-                    Chartisan.hooks.datasets([
-                        { type: 'line', fill: false },
-                        'bar'
-                    ])
-                ]
+                hooks: new ChartisanHooks()
+                    .colors()
+                    .responsive()
+                    .beginAtZero()
+                    .legend({ position: 'bottom' })
+                    .title('This is a sample chart using chartisan!')
+                    .datasets([{ type: 'line', fill: false }, 'bar'])
             })
             const chart2 = new Chartisan({
                 el: '#chart2',

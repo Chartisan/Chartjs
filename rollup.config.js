@@ -4,22 +4,21 @@ import postcss from 'rollup-plugin-postcss'
 import { terser } from 'rollup-plugin-terser'
 import commonjs from 'rollup-plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import { name, peerDependencies } from './package.json'
+import { main, peerDependencies } from './package.json'
 // import typescript from '@rollup/plugin-typescript'
 import babel from 'rollup-plugin-babel'
 // import typescript from 'rollup-plugin-typescript2'
 import { DEFAULT_EXTENSIONS } from '@babel/core'
 
-const pkg_name = name.substr(1).replace('/', '_')
 const extensions = [...DEFAULT_EXTENSIONS, '.ts', '.tsx']
 
 export default {
     input: 'src/index.ts',
     output: [
         {
-            file: `dist/${pkg_name}.js`,
-            format: 'iife',
-            name: `${pkg_name}`,
+            file: main,
+            format: 'umd',
+            name: `chartisan`,
             globals: {
                 'chart.js': 'Chart'
             }

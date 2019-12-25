@@ -2,7 +2,7 @@
     "name": "@chartisan/chartjs",
     "version": "1.0.0",
     "description": "The next generation charting experience",
-    "browser": "dist/chartisan_chartjs.js",
+    "main": "dist/chartisan_chartjs.js",
     "types": "dist/types/index.d.ts",
     "repository": {
         "type": "git",

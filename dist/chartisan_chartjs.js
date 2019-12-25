@@ -1,5 +1,8 @@
-var chartisan_chartjs = (function (exports, Chart) {
-  'use strict';
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('chart.js')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'chart.js'], factory) :
+  (global = global || self, factory(global.chartisan = {}, global.Chart));
+}(this, (function (exports, Chart) { 'use strict';
 
   Chart = Chart && Chart.hasOwnProperty('default') ? Chart['default'] : Chart;
 
@@ -121,36 +124,6 @@ var chartisan_chartjs = (function (exports, Chart) {
     return _assertThisInitialized(self);
   }
 
-  function styleInject(css, ref) {
-    if ( ref === void 0 ) ref = {};
-    var insertAt = ref.insertAt;
-
-    if (!css || typeof document === 'undefined') { return; }
-
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var style = document.createElement('style');
-    style.type = 'text/css';
-
-    if (insertAt === 'top') {
-      if (head.firstChild) {
-        head.insertBefore(style, head.firstChild);
-      } else {
-        head.appendChild(style);
-      }
-    } else {
-      head.appendChild(style);
-    }
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-  }
-
-  var css = ".chartisan {\n    height: 100%;\n    width: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}\n.chartisan-help-block {\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n}\n.chartisan-help-text {\n    margin-top: 1.5rem;\n    text-transform: uppercase;\n    letter-spacing: 0.2em;\n    font-size: 0.75rem;\n}\n.chartisan-help-text-error {\n    margin-top: 1.5rem;\n    text-transform: uppercase;\n    letter-spacing: 0.2em;\n    font-size: 0.6rem;\n    color: #f56565;\n}\n.chartisan-refresh-chart {\n    cursor: pointer;\n}\n";
-  styleInject(css);
-
   /**
    * Determines if the given object satisfies ChartData.
    *
@@ -188,6 +161,26 @@ var chartisan_chartjs = (function (exports, Chart) {
           isChartData(obj.chart) &&
           obj.datasets.every(function (d) { return isDatasetData(d); }));
   }
+
+  /**
+   * Represents the hooks of the chart.
+   *
+   * @export
+   * @class Hooks
+   * @template D
+   */
+  var Hooks = /** @class */ (function () {
+      function Hooks() {
+          /**
+           * Stores the hooks.
+           *
+           * @type {Hook<D>[]}
+           * @memberof Hooks
+           */
+          this.hooks = [];
+      }
+      return Hooks;
+  }());
 
   var isMergeableObject = function isMergeableObject(value) {
   	return isNonNullObject(value)
@@ -360,6 +353,20 @@ var chartisan_chartjs = (function (exports, Chart) {
       return __assign.apply(this, arguments);
   };
 
+  var general = (function (_a) {
+      var size = _a.size, color = _a.color;
+      return "\n    <svg\n        role=\"img\"\n        xmlns=\"http://www.w3.org/2000/svg\"\n        width=\"" + size[0] + "\"\n        height=\"" + size[1] + "\"\n        viewBox=\"0 0 24 24\"\n        aria-labelledby=\"refreshIconTitle\"\n        stroke=\"" + color + "\"\n        stroke-width=\"1\"\n        stroke-linecap=\"square\"\n        stroke-linejoin=\"miter\"\n        fill=\"none\"\n        color=\"" + color + "\"\n    >\n        <title id=\"refreshIconTitle\">Refresh</title>\n        <polyline points=\"22 12 19 15 16 12\"/>\n        <path d=\"M11,20 C6.581722,20 3,16.418278 3,12 C3,7.581722 6.581722,4 11,4 C15.418278,4 19,7.581722 19,12 L19,14\"/>\n    </svg>\n";
+  });
+
+  var errors = {
+      general: general
+  };
+  var error = function (options, error) { return "\n    <div class=\"chartisan-help-block\">\n    <div class=\"chartisan-refresh-chart\">\n        " + errors[options.type](options) + "\n    </div>\n    " + (options.text != ''
+      ? "\n                <div class=\"chartisan-help-text\" style=\"color: " + options.textColor + ";\">\n                    " + options.text + "\n                </div>\n            "
+      : '') + "\n    " + (options.debug
+      ? "<div class=\"chartisan-help-text-error\">\n        " + error.message + "\n    </div>"
+      : '') + "\n    </div>\n"; };
+
   /**
    * The bar loader.
    *
@@ -388,20 +395,6 @@ var chartisan_chartjs = (function (exports, Chart) {
    */
   var loader = function (options) { return "\n    <div class=\"chartisan-help-block\">\n        " + loaders[options.type](options) + "\n        " + (options.text != ''
       ? "\n                    <div class=\"chartisan-help-text\" style=\"color: " + options.textColor + ";\">\n                        " + options.text + "\n                    </div>\n                "
-      : '') + "\n    </div>\n"; };
-
-  var general = (function (_a) {
-      var size = _a.size, color = _a.color;
-      return "\n    <svg\n        role=\"img\"\n        xmlns=\"http://www.w3.org/2000/svg\"\n        width=\"" + size[0] + "\"\n        height=\"" + size[1] + "\"\n        viewBox=\"0 0 24 24\"\n        aria-labelledby=\"refreshIconTitle\"\n        stroke=\"" + color + "\"\n        stroke-width=\"1\"\n        stroke-linecap=\"square\"\n        stroke-linejoin=\"miter\"\n        fill=\"none\"\n        color=\"" + color + "\"\n    >\n        <title id=\"refreshIconTitle\">Refresh</title>\n        <polyline points=\"22 12 19 15 16 12\"/>\n        <path d=\"M11,20 C6.581722,20 3,16.418278 3,12 C3,7.581722 6.581722,4 11,4 C15.418278,4 19,7.581722 19,12 L19,14\"/>\n    </svg>\n";
-  });
-
-  var errors = {
-      general: general
-  };
-  var error = function (options, error) { return "\n    <div class=\"chartisan-help-block\">\n    <div class=\"chartisan-refresh-chart\">\n        " + errors[options.type](options) + "\n    </div>\n    " + (options.text != ''
-      ? "\n                <div class=\"chartisan-help-text\" style=\"color: " + options.textColor + ";\">\n                    " + options.text + "\n                </div>\n            "
-      : '') + "\n    " + (options.debug
-      ? "<div class=\"chartisan-help-text-error\">\n        " + error.message + "\n    </div>"
       : '') + "\n    </div>\n"; };
 
   /**
@@ -460,7 +453,7 @@ var chartisan_chartjs = (function (exports, Chart) {
                   textColor: '#a0aec0',
                   debug: true
               },
-              hooks: []
+              hooks: undefined
           };
           /**
            * State of the chart.
@@ -570,9 +563,11 @@ var chartisan_chartjs = (function (exports, Chart) {
               this.formatData(response)
           )*/
           var data = this.formatData(response);
-          for (var _i = 0, _a = this.options.hooks; _i < _a.length; _i++) {
-              var hook = _a[_i];
-              data = hook(data);
+          if (this.options.hooks) {
+              for (var _i = 0, _a = this.options.hooks.hooks; _i < _a.length; _i++) {
+                  var hook = _a[_i];
+                  data = hook(data);
+              }
           }
           this.changeTo(ChartState.Show);
           this.onUpdate(data);
@@ -599,216 +594,295 @@ var chartisan_chartjs = (function (exports, Chart) {
       return Chartisan;
   }());
 
-  /**
-   * Used to get a color of a dataset.
-   *
-   * @export
-   * @param {*} [colors=colorPalette]
-   * @returns {Hook}
-   */
-  function Palette() {
-    var colors = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : colorPalette;
-    return function (chart) {
-      var _chart$data;
+  var Hooks$1 =
+  /*#__PURE__*/
+  function (_BaseHooks) {
+    _inherits(Hooks, _BaseHooks);
 
-      if ((_chart$data = chart.data) === null || _chart$data === void 0 ? void 0 : _chart$data.datasets) chart.data.datasets = chart.data.datasets.map(function (dataset, index) {
-        return _objectSpread2({}, dataset, {
-          borderColor: colors[index % colors.length],
-          backgroundColor: colors[index % colors.length]
+    function Hooks() {
+      _classCallCheck(this, Hooks);
+
+      return _possibleConstructorReturn(this, _getPrototypeOf(Hooks).apply(this, arguments));
+    }
+
+    _createClass(Hooks, [{
+      key: "colors",
+
+      /**
+       * Used to set the color color of a dataset.
+       *
+       * @param {*} [colors=colorPalette]
+       * @returns {this}
+       * @memberof Hooks
+       */
+      value: function colors() {
+        var _colors = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : colorPalette;
+
+        this.hooks.push(function (chart) {
+          var _chart$data;
+
+          if ((_chart$data = chart.data) === null || _chart$data === void 0 ? void 0 : _chart$data.datasets) chart.data.datasets = chart.data.datasets.map(function (dataset, index) {
+            return _objectSpread2({}, dataset, {
+              borderColor: _colors[index % _colors.length],
+              backgroundColor: _colors[index % _colors.length]
+            });
+          });
+          return chart;
         });
-      });
-      return chart;
-    };
-  }
-  /**
-   * Used to make the chart responsive.
-   *
-   * @export
-   * @param {boolean} [maintainAspectRatio=true]
-   * @returns {Hook}
-   */
+        return this;
+      }
+      /**
+       * Used to make the chart responsive.
+       *
+       * @param {boolean} [maintainAspectRatio=true]
+       * @returns {this}
+       * @memberof Hooks
+       */
 
-  function Responsive() {
-    var maintainAspectRatio = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    return function (chart) {
-      return mergeOptions(chart, {
-        options: {
-          maintainAspectRatio: maintainAspectRatio
-        }
-      });
-    };
-  }
-  /**
-   * Set the chart legend options.
-   *
-   * @export
-   * @param {ChartLegendOptions} [legend={}]
-   * @returns {Hook}
-   */
+    }, {
+      key: "responsive",
+      value: function responsive() {
+        var maintainAspectRatio = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        this.hooks.push(function (chart) {
+          return mergeOptions(chart, {
+            options: {
+              maintainAspectRatio: maintainAspectRatio
+            }
+          });
+        });
+        return this;
+      }
+      /**
+       * Set the chart legend options. If a boolean is
+       * supplied, it will be used as the display value.
+       *
+       * @param {(boolean | ChartLegendOptions)} [legend={}]
+       * @returns {this}
+       * @memberof Hooks
+       */
 
-  function Legend() {
-    var legend = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    return function (chart) {
-      return mergeOptions(chart, {
-        options: {
-          legend: legend
-        }
-      });
-    };
-  }
-  /**
-   * Determines if the chart will show the axes.
-   *
-   * @export
-   * @param {boolean} [display=true]
-   * @param {boolean} [strict=false]
-   * @returns {Hook}
-   */
+    }, {
+      key: "legend",
+      value: function legend() {
+        var _legend = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-  function DisplayAxes() {
-    var display = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    var strict = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    return function (chart) {
-      if (strict) return mergeOptions(chart, {
-        options: {
-          scale: {
-            display: display
-          }
-        }
-      });
-      return mergeOptions(chart, {
-        options: {
-          scales: {
-            xAxes: [{
-              display: display
-            }],
-            yAxes: [{
-              display: display
-            }]
-          }
-        }
-      });
-    };
-  }
-  /**
-   * Creates a minimalist chart.
-   *
-   * @export
-   * @param {boolean} [value=true]
-   * @returns {Hook}
-   */
+        if (typeof _legend === 'boolean') _legend = {
+          display: _legend
+        };
+        this.hooks.push(function (chart) {
+          return mergeOptions(chart, {
+            options: {
+              legend: _legend
+            }
+          });
+        });
+        return this;
+      }
+      /**
+       * Determines if the chart will show the axes.
+       *
+       * @param {boolean} [display=true]
+       * @param {boolean} [strict=false]
+       * @returns {Hook}
+       * @memberof Hooks
+       */
 
-  function Minimalist() {
-    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    return function (chart) {
-      chart = Legend({
-        display: !value
-      })(chart);
-      return DisplayAxes(!value)(chart);
-    };
-  }
-  /**
-   * Determines the padding of the chart.
-   *
-   * @export
-   * @param {(number | ChartLayoutPaddingObject)} [value=5]
-   * @returns
-   */
-
-  function Padding() {
-    var padding = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
-    return function (chart) {
-      return mergeOptions(chart, {
-        options: {
-          layout: {
-            padding: padding
-          }
-        }
-      });
-    };
-  }
-  /**
-   * Used as the interface for the types hook.
-   *
-   * @export
-   * @interface TypesHook
-   * @extends {ChartDataSets}
-   */
-
-  /**
-   * Set the dataset options.
-   *
-   * @export
-   * @param {((string | TypesHook)[])} types
-   * @param {string} [general='bar']
-   * @returns {Hook}
-   */
-  function Datasets(types) {
-    var general = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'bar';
-    var t = types.map(function (e) {
-      return typeof e === 'string' ? {
-        type: e
-      } : e;
-    });
-    return function (chart) {
-      var _chart$data2, _chart$data3;
-
-      chart.type = general;
-      (_chart$data2 = chart.data) === null || _chart$data2 === void 0 ? void 0 : _chart$data2.datasets;
-      if ((_chart$data3 = chart.data) === null || _chart$data3 === void 0 ? void 0 : _chart$data3.datasets) chart.data.datasets = chart.data.datasets.map(function (dataset, index) {
-        return _objectSpread2({}, dataset, {}, t[index % t.length]);
-      });
-      return chart;
-    };
-  }
-  /**
-   * Sets a title to the chart.
-   *
-   * @export
-   * @param {(string | ChartTitleOptions)} [titleOrOptions={}]
-   * @returns {Hook}
-   */
-
-  function Title() {
-    var title = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    title = typeof title === 'string' ? {
-      text: title,
-      display: true
-    } : _objectSpread2({
-      display: true
-    }, title);
-    return function (chart) {
-      return mergeOptions(chart, {
-        options: {
-          title: title
-        }
-      });
-    };
-  }
-  /**
-   * Set the chart to begin at zero.
-   *
-   * @export
-   * @param {boolean} [beginAtZero=true]
-   * @returns {Hook}
-   */
-
-  function BeginAtZero() {
-    var beginAtZero = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    return function (chart) {
-      return mergeOptions(chart, {
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: beginAtZero
+    }, {
+      key: "displayAxes",
+      value: function displayAxes() {
+        var display = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        var strict = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+        this.hooks.push(function (chart) {
+          if (strict) return mergeOptions(chart, {
+            options: {
+              scale: {
+                display: display
               }
-            }]
-          }
-        }
-      });
-    };
+            }
+          });
+          return mergeOptions(chart, {
+            options: {
+              scales: {
+                xAxes: [{
+                  display: display
+                }],
+                yAxes: [{
+                  display: display
+                }]
+              }
+            }
+          });
+        });
+        return this;
+      }
+      /**
+       * Creates a minimalist chart.
+       *
+       * @param {boolean} [value=true]
+       * @returns {Hook}
+       * @memberof Hooks
+       */
+
+    }, {
+      key: "minimalist",
+      value: function minimalist() {
+        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        this.legend({
+          display: !value
+        });
+        this.displayAxes(!value);
+        return this;
+      }
+      /**
+       * Determines the padding of the chart.
+       *
+       * @param {(number | ChartLayoutPaddingObject)} [padding=5]
+       * @returns
+       * @memberof Hooks
+       */
+
+    }, {
+      key: "padding",
+      value: function padding() {
+        var _padding = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
+
+        this.hooks.push(function (chart) {
+          return mergeOptions(chart, {
+            options: {
+              layout: {
+                padding: _padding
+              }
+            }
+          });
+        });
+        return this;
+      }
+      /**
+       * Set the dataset options. If a single string is provided, all the datasets
+       * will will be specified to the desired type. If an array is provided, if the
+       * inner element is a string, it will be used as a type, otherwise, the options
+       * will be applied, in both cases, to the nth position. Keep in mind that if the
+       * array length is less than the datasets, it will start from the start again.
+       *
+       * @param {(ChartType | (ChartType | DatasetHook)[])} types
+       * @param {string} [general='bar']
+       * @returns {this}
+       * @memberof Hooks
+       */
+
+    }, {
+      key: "datasets",
+      value: function datasets(types) {
+        var general = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'bar';
+        var t = Array.isArray(types) ? types.map(function (e) {
+          return typeof e === 'string' ? {
+            type: e
+          } : e;
+        }) : [{
+          type: types
+        }];
+        this.hooks.push(function (chart) {
+          var _chart$data2, _chart$data3;
+
+          chart.type = general;
+          (_chart$data2 = chart.data) === null || _chart$data2 === void 0 ? void 0 : _chart$data2.datasets;
+          if ((_chart$data3 = chart.data) === null || _chart$data3 === void 0 ? void 0 : _chart$data3.datasets) chart.data.datasets = chart.data.datasets.map(function (dataset, index) {
+            return _objectSpread2({}, dataset, {}, t[index % t.length]);
+          });
+          return chart;
+        });
+        return this;
+      }
+      /**
+       * Sets a title to the chart.
+       *
+       * @param {(string | ChartTitleOptions)} [title={}]
+       * @returns {this}
+       * @memberof Hooks
+       */
+
+    }, {
+      key: "title",
+      value: function title() {
+        var _title = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        _title = typeof _title === 'string' ? {
+          text: _title,
+          display: true
+        } : _objectSpread2({
+          display: true
+        }, _title);
+        this.hooks.push(function (chart) {
+          return mergeOptions(chart, {
+            options: {
+              title: _title
+            }
+          });
+        });
+        return this;
+      }
+      /**
+       * Set the chart to begin at zero.
+       *
+       * @param {boolean} [beginAtZero=true]
+       * @returns {this}
+       * @memberof Hooks
+       */
+
+    }, {
+      key: "beginAtZero",
+      value: function beginAtZero() {
+        var _beginAtZero = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+        this.hooks.push(function (chart) {
+          return mergeOptions(chart, {
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: _beginAtZero
+                  }
+                }]
+              }
+            }
+          });
+        });
+        return this;
+      }
+    }]);
+
+    return Hooks;
+  }(Hooks);
+
+  function styleInject(css, ref) {
+    if ( ref === void 0 ) ref = {};
+    var insertAt = ref.insertAt;
+
+    if (!css || typeof document === 'undefined') { return; }
+
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var style = document.createElement('style');
+    style.type = 'text/css';
+
+    if (insertAt === 'top') {
+      if (head.firstChild) {
+        head.insertBefore(style, head.firstChild);
+      } else {
+        head.appendChild(style);
+      }
+    } else {
+      head.appendChild(style);
+    }
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
   }
+
+  var css = ".chartisan {\n    height: 100%;\n    width: 100%;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}\n.chartisan-help-block {\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n}\n.chartisan-help-text {\n    margin-top: 1.5rem;\n    text-transform: uppercase;\n    letter-spacing: 0.2em;\n    font-size: 0.75rem;\n}\n.chartisan-help-text-error {\n    margin-top: 1.5rem;\n    text-transform: uppercase;\n    letter-spacing: 0.2em;\n    font-size: 0.6rem;\n    color: #f56565;\n}\n.chartisan-refresh-chart {\n    cursor: pointer;\n}\n";
+  styleInject(css);
 
   /**
    * Base chart class for ChartJS.
@@ -822,13 +896,6 @@ var chartisan_chartjs = (function (exports, Chart) {
   /*#__PURE__*/
   function (_Base) {
     _inherits(Chartisan, _Base);
-
-    /**
-     * Stores the chartisan hooks for chart.js
-     *
-     * @static
-     * @memberof Chartisan
-     */
 
     /**
      * The chart canvas.
@@ -914,23 +981,11 @@ var chartisan_chartjs = (function (exports, Chart) {
 
     return Chartisan;
   }(Chartisan);
-
-  _defineProperty(Chartisan$1, "hooks", {
-    title: Title,
-    legend: Legend,
-    padding: Padding,
-    palette: Palette,
-    datasets: Datasets,
-    minimalist: Minimalist,
-    responsive: Responsive,
-    beginAtZero: BeginAtZero,
-    displayAxes: DisplayAxes
-  });
-
   window.Chartisan = Chartisan$1;
+  window.ChartisanHooks = Hooks$1;
 
   exports.Chartisan = Chartisan$1;
 
-  return exports;
+  Object.defineProperty(exports, '__esModule', { value: true });
 
-}({}, Chart));
+})));

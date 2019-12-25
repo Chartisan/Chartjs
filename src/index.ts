@@ -1,17 +1,8 @@
+import { Hooks } from './hooks'
 import '@chartisan/chartisan/style.css'
 import Chart, { ChartConfiguration } from 'chart.js'
 import {
-    Title,
-    Legend,
-    Padding,
-    Palette,
-    Datasets,
-    Minimalist,
-    Responsive,
-    BeginAtZero,
-    DisplayAxes
-} from './hooks'
-import {
+    isHook,
     ServerData,
     isChartisan,
     ChartisanOptions,
@@ -26,24 +17,6 @@ import {
  * @extends {Base}
  */
 export class Chartisan extends Base<ChartConfiguration> {
-    /**
-     * Stores the chartisan hooks for chart.js
-     *
-     * @static
-     * @memberof Chartisan
-     */
-    static hooks = {
-        title: Title,
-        legend: Legend,
-        padding: Padding,
-        palette: Palette,
-        datasets: Datasets,
-        minimalist: Minimalist,
-        responsive: Responsive,
-        beginAtZero: BeginAtZero,
-        displayAxes: DisplayAxes
-    }
-
     /**
      * The chart canvas.
      *
@@ -126,7 +99,16 @@ declare global {
          * @memberof Window
          */
         Chartisan: isChartisan<ChartConfiguration>
+
+        /**
+         * Determines the hooks of the chart.
+         *
+         * @type {isHook<ChartConfiguration>}
+         * @memberof Window
+         */
+        ChartisanHooks: isHook<ChartConfiguration>
     }
 }
 
 window.Chartisan = Chartisan
+window.ChartisanHooks = Hooks
