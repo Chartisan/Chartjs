@@ -1,6 +1,6 @@
 import { Hooks } from './hooks'
 import '@chartisan/chartisan/style.css'
-import Chart, { ChartConfiguration } from 'chart.js'
+import Chart, { ChartConfiguration, ChartDataSets } from 'chart.js'
 import {
     isHook,
     ServerData,
@@ -23,7 +23,7 @@ export class Chartisan extends Base<ChartConfiguration> {
      * @type {HTMLCanvasElement}
      * @memberof Chartisan
      */
-    canvas: HTMLCanvasElement
+    canvas?: HTMLCanvasElement
 
     /**
      * Stores the chart instance.
@@ -34,16 +34,35 @@ export class Chartisan extends Base<ChartConfiguration> {
     chart?: Chart
 
     /**
-     * Creates an instance of Chartisan.
+     * Helper to mutate an array manually (this is used
+     * because chartjs can only handle animations when the
+     * original array is modified).
      *
-     * @param {ChartisanOptions} options
+     * @static
+     * @template T
+     * @param {T[]} dest
+     * @param {T[]} src
+     * @param {(dest: T[], src: T[], index: number) => void} [action]
      * @memberof Chartisan
      */
-    constructor(options: ChartisanOptions<ChartConfiguration>) {
-        super(options)
-        this.canvas = document.createElement('canvas')
-        this.canvas.style.width = '100%'
-        this.canvas.style.height = '100%'
+    static mutateArray<T>(
+        dest: T[],
+        src: T[],
+        action?: (dest: T[], src: T[], index: number) => void
+    ) {
+        let i: number
+        for (i = 0; i < src.length; i++) {
+            if (i < dest.length) {
+                if (action) {
+                    action(dest, src, i)
+                    continue
+                }
+                dest[i] = src[i]
+                continue
+            }
+            dest.push(src[i])
+        }
+        while (i < dest.length) dest.pop()
     }
 
     /**
@@ -77,10 +96,57 @@ export class Chartisan extends Base<ChartConfiguration> {
      * @memberof Chartisan
      */
     protected onUpdate(data: ChartConfiguration) {
-        console.log(data)
-        this.controller.appendChild(this.canvas)
-        this.chart = new Chart(this.canvas, data)
-        console.log('Chart created...')
+        if (this.chart) this.chart.destroy()
+        this.renewCanvas()
+        this.chart = new Chart(this.canvas!, data)
+    }
+
+    /**
+     * Renews the canvas for another chart to be used.
+     *
+     * @protected
+     * @memberof Chartisan
+     */
+    protected renewCanvas() {
+        if (this.canvas) this.body.removeChild(this.canvas)
+        this.canvas = document.createElement('canvas')
+        this.canvas.style.width = '100%'
+        this.canvas.style.height = '100%'
+        this.body.appendChild(this.canvas)
+    }
+
+    /**
+     * Handles a successfull response of the chart data
+     * in the background (possibly, updating the values
+     * of the chart without creating a new one).
+     *
+     * @protected
+     * @param {ChartConfiguration} data
+     * @memberof Chartisan
+     */
+    protected onBackgroundUpdate(data: ChartConfiguration) {
+        if (this.chart) {
+            this.chart.options = {
+                ...this.chart.options,
+                ...data.options
+            }
+            // To update the data arrays, it need to be performed
+            // to the original one. If the original one is not modified
+            // no animation will be performed. Therefore, please don't
+            // try beeing smarter here.
+            if (this.chart.data.datasets && data.data?.datasets) {
+                Chartisan.mutateArray(
+                    this.chart.data.datasets,
+                    data.data.datasets,
+                    (dest, src, i) => {
+                        Chartisan.mutateArray<
+                            (number | null | undefined) | Chart.ChartPoint
+                        >(dest[i].data!, src[i].data!)
+                    }
+                )
+            }
+            this.chart.update()
+        }
     }
 }
 

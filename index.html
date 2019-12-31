@@ -28,6 +28,7 @@
     <body class="bg-gray-200">
         <div class="container mx-auto my-6">
             <div class="bg-white rounded shadow-md p-6">
+                <button onclick="update1()">Update</button>
                 <div id="chart1" class="chart"></div>
             </div>
             <div class="mt-4 bg-white rounded shadow-md p-6">
@@ -39,11 +40,11 @@
                 Copyright &copy; 2020 &mdash; Èrik Campobadal Forés
             </div>
         </div>
-        <script
+        <!-- <script
             src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
             integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI="
             crossorigin="anonymous"
-        ></script>
+        ></script> -->
         <script src="./dist/chartisan_chartjs.js"></script>
         <script>
             const chart1 = new Chartisan({
@@ -61,6 +62,10 @@
                 el: '#chart2',
                 url: 'http://127.0.0.1:9000/invalid'
             })
+            function update1() {
+                // chart1.update()
+                chart1.update({ background: true })
+            }
         </script>
     </body>
 </html>

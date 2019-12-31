@@ -20,13 +20,13 @@ export default {
             format: 'umd',
             name: `chartisan`,
             globals: {
-                'chart.js': 'Chart'
+                // 'chart.js': 'Chart'
             }
         }
     ],
     external: [
         // ...Object.keys(dependencies || {}),
-        'chart.js',
+        // 'chart.js',
         ...Object.keys(peerDependencies || {})
     ],
     plugins: [
