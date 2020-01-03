@@ -1,13 +1,14 @@
 import { Hooks } from './hooks'
 import '@chartisan/chartisan/style.css'
-import Chart, { ChartConfiguration, ChartDataSets } from 'chart.js'
+import Chart, { ChartConfiguration, ChartUpdateProps } from 'chart.js'
 import {
     isHook,
     ServerData,
     isChartisan,
-    ChartisanOptions,
     Chartisan as Base
 } from '@chartisan/chartisan'
+
+export { Hooks as ChartisanHooks }
 
 /**
  * Base chart class for ChartJS.
@@ -89,19 +90,6 @@ export class Chartisan extends Base<ChartConfiguration> {
     }
 
     /**
-     * Handles a successfull response of the chart data.
-     *
-     * @protected
-     * @param {ChartConfiguration} data
-     * @memberof Chartisan
-     */
-    protected onUpdate(data: ChartConfiguration) {
-        if (this.chart) this.chart.destroy()
-        this.renewCanvas()
-        this.chart = new Chart(this.canvas!, data)
-    }
-
-    /**
      * Renews the canvas for another chart to be used.
      *
      * @protected
@@ -116,19 +104,41 @@ export class Chartisan extends Base<ChartConfiguration> {
     }
 
     /**
+     * Handles a successfull response of the chart data.
+     *
+     * @protected
+     * @param {ChartConfiguration} data
+     * @memberof Chartisan
+     */
+    protected onUpdate(data: ChartConfiguration) {
+        if (this.chart) this.chart.destroy()
+        this.renewCanvas()
+        this.chart = new Chart(this.canvas!, data)
+    }
+
+    /**
      * Handles a successfull response of the chart data
      * in the background (possibly, updating the values
      * of the chart without creating a new one).
      *
      * @protected
      * @param {ChartConfiguration} data
+     * @param {ChartUpdateProps} [options]
      * @memberof Chartisan
      */
-    protected onBackgroundUpdate(data: ChartConfiguration) {
+    protected onBackgroundUpdate(
+        data: ChartConfiguration,
+        options?: ChartUpdateProps
+    ) {
         if (this.chart) {
+            // Update the chart options.
             this.chart.options = {
                 ...this.chart.options,
                 ...data.options
+            }
+            // Update the labels.
+            if (this.chart.data.labels && data.data?.labels) {
+                Chartisan.mutateArray(this.chart.data.labels, data.data.labels)
             }
             // To update the data arrays, it need to be performed
             // to the original one. If the original one is not modified
@@ -145,7 +155,7 @@ export class Chartisan extends Base<ChartConfiguration> {
                     }
                 )
             }
-            this.chart.update()
+            this.chart.update(options)
         }
     }
 }

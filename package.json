@@ -10,7 +10,7 @@
     },
     "scripts": {
         "dev": "rollup -c --environment BUILD:development",
-        "build": "rollup -c --environment BUILD:production",
+        "build": "tsc && rollup -c --environment BUILD:production",
         "watch": "rollup -c --environment BUILD:development --watch"
     },
     "keywords": [],

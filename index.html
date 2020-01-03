@@ -40,11 +40,6 @@
                 Copyright &copy; 2020 &mdash; Èrik Campobadal Forés
             </div>
         </div>
-        <!-- <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
-            integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI="
-            crossorigin="anonymous"
-        ></script> -->
         <script src="./dist/chartisan_chartjs.js"></script>
         <script>
             const chart1 = new Chartisan({
@@ -60,7 +55,35 @@
             })
             const chart2 = new Chartisan({
                 el: '#chart2',
-                url: 'http://127.0.0.1:9000/invalid'
+                data: {
+                    chart: {
+                        labels: ['a', 'b', 'c'],
+                        extra: null
+                    },
+                    datasets: [
+                        {
+                            id: 1,
+                            name: 'Sample 1',
+                            values: [1, 2, 3],
+                            isDatetime: false,
+                            extra: null
+                        },
+                        {
+                            id: 2,
+                            name: 'Sample 2',
+                            values: [3, 2, 1],
+                            isDatetime: false,
+                            extra: null
+                        }
+                    ]
+                },
+                hooks: new ChartisanHooks()
+                    .colors(['#00ffff', 'green'])
+                    .beginAtZero()
+                    .responsive()
+                    .legend(false)
+                    .title('Example chart using static data.')
+                    .datasets([{ type: 'line', fill: false }, 'bar'])
             })
             function update1() {
                 // chart1.update()

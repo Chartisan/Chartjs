@@ -60,10 +60,10 @@ export class Hooks extends BaseHooks<ChartConfiguration> {
      * @returns {this}
      * @memberof Hooks
      */
-    responsive(maintainAspectRatio = true): this {
+    responsive(value = true): this {
         this.hooks.push(function(chart: CC): CC {
             return mergeOptions(chart, {
-                options: { maintainAspectRatio }
+                options: { maintainAspectRatio: !value }
             })
         })
         return this
