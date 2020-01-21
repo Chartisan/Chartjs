@@ -1,5 +1,6 @@
 import { Hooks as BaseHooks } from '@chartisan/chartisan';
-import { ChartType, ChartDataSets, ChartTitleOptions, ChartConfiguration, ChartLegendOptions, ChartLayoutPaddingObject, ChartColor, Scriptable } from 'chart.js';
+import { ChartType, ChartDataSets, ChartTitleOptions, ChartLegendOptions, ChartTooltipOptions, ChartAnimationOptions, ChartLayoutPaddingObject, ChartColor, Scriptable } from 'chart.js';
+import { CC } from './index';
 /**
  * Used as the interface for the types hook.
  *
@@ -10,7 +11,7 @@ import { ChartType, ChartDataSets, ChartTitleOptions, ChartConfiguration, ChartL
 export interface DatasetHook extends ChartDataSets {
     type: ChartType | string;
 }
-export declare class Hooks extends BaseHooks<ChartConfiguration> {
+export declare class Hooks extends BaseHooks<CC> {
     /**
      * Used to set the color color of a dataset.
      *
@@ -90,4 +91,32 @@ export declare class Hooks extends BaseHooks<ChartConfiguration> {
      * @memberof Hooks
      */
     beginAtZero(beginAtZero?: boolean): this;
+    /**
+     * Sets the tooltip options for the chart.
+     *
+     * @param {(boolean | ChartTooltipOptions)} tooltips
+     * @returns {this}
+     * @memberof Hooks
+     */
+    tooltip(tooltips: boolean | ChartTooltipOptions): this;
+    /**
+     * Sometimes you need a very complex legend. In these cases,
+     * it makes sense to generate an HTML legend. Charts provide
+     * a generateLegend() method on their prototype that returns an
+     * HTML string for the legend. To configure how this legend
+     * is generated, you can change the legendCallback config property.
+     *
+     * @param {(chart: Chart) => string} legendCallback
+     * @returns {this}
+     * @memberof Hooks
+     */
+    legendCallback(legendCallback: (chart: Chart) => string): this;
+    /**
+     * Configures the animations of chart.js.
+     *
+     * @param {ChartAnimationOptions} animation
+     * @returns {this}
+     * @memberof Hooks
+     */
+    animation(animation: ChartAnimationOptions): this;
 }

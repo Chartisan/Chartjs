@@ -4,11 +4,13 @@ import {
     Hooks as BaseHooks
 } from '@chartisan/chartisan'
 import {
+    Chart,
     ChartType,
     ChartDataSets,
     ChartTitleOptions,
-    ChartConfiguration,
     ChartLegendOptions,
+    ChartTooltipOptions,
+    ChartAnimationOptions,
     ChartLayoutPaddingObject,
     ChartColor,
     Scriptable
@@ -209,6 +211,59 @@ export class Hooks extends BaseHooks<CC> {
         this.hooks.push(function(chart: CC): CC {
             return mergeOptions(chart, {
                 options: { scales: { yAxes: [{ ticks: { beginAtZero } }] } }
+            })
+        })
+        return this
+    }
+
+    /**
+     * Sets the tooltip options for the chart.
+     *
+     * @param {(boolean | ChartTooltipOptions)} tooltips
+     * @returns {this}
+     * @memberof Hooks
+     */
+    tooltip(tooltips: boolean | ChartTooltipOptions): this {
+        if (typeof tooltips === 'boolean') tooltips = { enabled: tooltips }
+        this.hooks.push(function(chart: CC): CC {
+            return mergeOptions(chart, {
+                options: { tooltips }
+            })
+        })
+        return this
+    }
+
+    /**
+     * Sometimes you need a very complex legend. In these cases,
+     * it makes sense to generate an HTML legend. Charts provide
+     * a generateLegend() method on their prototype that returns an
+     * HTML string for the legend. To configure how this legend
+     * is generated, you can change the legendCallback config property.
+     *
+     * @param {(chart: Chart) => string} legendCallback
+     * @returns {this}
+     * @memberof Hooks
+     */
+    legendCallback(legendCallback: (chart: Chart) => string): this {
+        this.hooks.push(function(chart: CC): CC {
+            return mergeOptions(chart, {
+                options: { legendCallback }
+            })
+        })
+        return this
+    }
+
+    /**
+     * Configures the animations of chart.js.
+     *
+     * @param {ChartAnimationOptions} animation
+     * @returns {this}
+     * @memberof Hooks
+     */
+    animation(animation: ChartAnimationOptions): this {
+        this.hooks.push(function(chart: CC): CC {
+            return mergeOptions(chart, {
+                options: { animation }
             })
         })
         return this

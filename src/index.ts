@@ -161,6 +161,27 @@ export class Chartisan extends Base<CC> {
             this.chart.update(options)
         }
     }
+
+    /**
+     * This returns a base 64 encoded string of the
+     * chart in it's current state.
+     *
+     * @returns {(string | undefined)}
+     * @memberof Chartisan
+     */
+    toImage(): string | undefined {
+        return this.chart?.toBase64Image()
+    }
+
+    /**
+     * Returns an HTML string of a legend for that chart.
+     * The legend is generated from the legendCallback in the options.
+     *
+     * @memberof Chartisan
+     */
+    legend(): string | undefined {
+        return (this.chart?.generateLegend() as string) ?? undefined
+    }
 }
 
 declare global {

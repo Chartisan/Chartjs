@@ -3,13 +3,19 @@ import Chart, { ChartConfiguration, ChartUpdateProps } from 'chart.js';
 import { isHook, ServerData, isChartisan, Chartisan as Base } from '@chartisan/chartisan';
 export { Hooks as ChartisanHooks };
 /**
+ * Used as an alias.
+ *
+ * @type {CC}
+ */
+export declare type CC = ChartConfiguration;
+/**
  * Base chart class for ChartJS.
  *
  * @export
  * @class Chart
  * @extends {Base}
  */
-export declare class Chartisan extends Base<ChartConfiguration> {
+export declare class Chartisan extends Base<CC> {
     /**
      * The chart canvas.
      *
@@ -43,10 +49,10 @@ export declare class Chartisan extends Base<ChartConfiguration> {
      *
      * @protected
      * @param {ServerData} response
-     * @returns {ChartConfiguration}
+     * @returns {CC}
      * @memberof Chartisan
      */
-    protected formatData(response: ServerData): ChartConfiguration;
+    protected formatData(response: ServerData): CC;
     /**
      * Renews the canvas for another chart to be used.
      *
@@ -58,21 +64,36 @@ export declare class Chartisan extends Base<ChartConfiguration> {
      * Handles a successfull response of the chart data.
      *
      * @protected
-     * @param {ChartConfiguration} data
+     * @param {CC} data
      * @memberof Chartisan
      */
-    protected onUpdate(data: ChartConfiguration): void;
+    protected onUpdate(data: CC): void;
     /**
      * Handles a successfull response of the chart data
      * in the background (possibly, updating the values
      * of the chart without creating a new one).
      *
      * @protected
-     * @param {ChartConfiguration} data
+     * @param {CC} data
      * @param {ChartUpdateProps} [options]
      * @memberof Chartisan
      */
-    protected onBackgroundUpdate(data: ChartConfiguration, options?: ChartUpdateProps): void;
+    protected onBackgroundUpdate(data: CC, options?: ChartUpdateProps): void;
+    /**
+     * This returns a base 64 encoded string of the
+     * chart in it's current state.
+     *
+     * @returns {(string | undefined)}
+     * @memberof Chartisan
+     */
+    toImage(): string | undefined;
+    /**
+     * Returns an HTML string of a legend for that chart.
+     * The legend is generated from the legendCallback in the options.
+     *
+     * @memberof Chartisan
+     */
+    legend(): string | undefined;
 }
 declare global {
     /**
@@ -88,13 +109,13 @@ declare global {
          * @type {isChartisan}
          * @memberof Window
          */
-        Chartisan: isChartisan<ChartConfiguration>;
+        Chartisan: isChartisan<CC>;
         /**
          * Determines the hooks of the chart.
          *
-         * @type {isHook<ChartConfiguration>}
+         * @type {isHook<CC>}
          * @memberof Window
          */
-        ChartisanHooks: isHook<ChartConfiguration>;
+        ChartisanHooks: isHook<CC>;
     }
 }
