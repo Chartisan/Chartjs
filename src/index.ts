@@ -1,5 +1,4 @@
 import { Hooks } from './hooks'
-import '@chartisan/chartisan/style.css'
 import Chart, { ChartConfiguration, ChartUpdateProps } from 'chart.js'
 import {
     isHook,
@@ -11,13 +10,20 @@ import {
 export { Hooks as ChartisanHooks }
 
 /**
+ * Used as an alias.
+ *
+ * @type {CC}
+ */
+export type CC = ChartConfiguration
+
+/**
  * Base chart class for ChartJS.
  *
  * @export
  * @class Chart
  * @extends {Base}
  */
-export class Chartisan extends Base<ChartConfiguration> {
+export class Chartisan extends Base<CC> {
     /**
      * The chart canvas.
      *
@@ -72,17 +78,17 @@ export class Chartisan extends Base<ChartConfiguration> {
      *
      * @protected
      * @param {ServerData} response
-     * @returns {ChartConfiguration}
+     * @returns {CC}
      * @memberof Chartisan
      */
-    protected formatData(response: ServerData): ChartConfiguration {
+    protected formatData(response: ServerData): CC {
         return {
             type: 'bar',
             data: {
                 labels: response.chart.labels,
-                datasets: response.datasets.map(dataset => ({
-                    label: dataset.name,
-                    data: dataset.values
+                datasets: response.datasets.map(({ name, values }) => ({
+                    label: name,
+                    data: values
                 }))
             },
             options: {}
@@ -107,10 +113,10 @@ export class Chartisan extends Base<ChartConfiguration> {
      * Handles a successfull response of the chart data.
      *
      * @protected
-     * @param {ChartConfiguration} data
+     * @param {CC} data
      * @memberof Chartisan
      */
-    protected onUpdate(data: ChartConfiguration) {
+    protected onUpdate(data: CC) {
         if (this.chart) this.chart.destroy()
         this.renewCanvas()
         this.chart = new Chart(this.canvas!, data)
@@ -122,14 +128,11 @@ export class Chartisan extends Base<ChartConfiguration> {
      * of the chart without creating a new one).
      *
      * @protected
-     * @param {ChartConfiguration} data
+     * @param {CC} data
      * @param {ChartUpdateProps} [options]
      * @memberof Chartisan
      */
-    protected onBackgroundUpdate(
-        data: ChartConfiguration,
-        options?: ChartUpdateProps
-    ) {
+    protected onBackgroundUpdate(data: CC, options?: ChartUpdateProps) {
         if (this.chart) {
             // Update the chart options.
             this.chart.options = {
@@ -174,15 +177,15 @@ declare global {
          * @type {isChartisan}
          * @memberof Window
          */
-        Chartisan: isChartisan<ChartConfiguration>
+        Chartisan: isChartisan<CC>
 
         /**
          * Determines the hooks of the chart.
          *
-         * @type {isHook<ChartConfiguration>}
+         * @type {isHook<CC>}
          * @memberof Window
          */
-        ChartisanHooks: isHook<ChartConfiguration>
+        ChartisanHooks: isHook<CC>
     }
 }
 

@@ -5,7 +5,7 @@
         "allowJs": true,
         "moduleResolution": "node",
         "declaration": true,
-        "emitDeclarationOnly": true,
+        // "emitDeclarationOnly": true,
         "declarationDir": "dist/types",
         "isolatedModules": true,
         "esModuleInterop": true,

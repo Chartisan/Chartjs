@@ -79,11 +79,10 @@
                 },
                 hooks: new ChartisanHooks()
                     .colors(['#00ffff', 'green'])
-                    .beginAtZero()
                     .responsive()
-                    .legend(false)
+                    .minimalist()
                     .title('Example chart using static data.')
-                    .datasets([{ type: 'line', fill: false }, 'bar'])
+                    .datasets('line')
             })
             function update1() {
                 // chart1.update()

@@ -1,5 +1,5 @@
 import { Hooks as BaseHooks } from '@chartisan/chartisan';
-import { ChartType, ChartDataSets, ChartTitleOptions, ChartConfiguration, ChartLegendOptions, ChartLayoutPaddingObject } from 'chart.js';
+import { ChartType, ChartDataSets, ChartTitleOptions, ChartConfiguration, ChartLegendOptions, ChartLayoutPaddingObject, ChartColor, Scriptable } from 'chart.js';
 /**
  * Used as the interface for the types hook.
  *
@@ -18,7 +18,7 @@ export declare class Hooks extends BaseHooks<ChartConfiguration> {
      * @returns {this}
      * @memberof Hooks
      */
-    colors(colors?: string[]): this;
+    colors(colors?: (ChartColor | ChartColor[] | Scriptable<ChartColor>)[]): this;
     /**
      * Used to make the chart responsive.
      *

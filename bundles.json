@@ -1,0 +1,14 @@
+[
+    {
+        "input": "src/index.ts",
+        "output": "dist/chartisan_chartjs.js"
+    },
+    {
+        "input": "src/index.ts",
+        "output": "dist/chartisan_chartjs_solo.js",
+        "external": ["chart.js"],
+        "globals": {
+            "chart.js": "Chart"
+        }
+    }
+]

@@ -9,15 +9,11 @@ import {
     ChartTitleOptions,
     ChartConfiguration,
     ChartLegendOptions,
-    ChartLayoutPaddingObject
+    ChartLayoutPaddingObject,
+    ChartColor,
+    Scriptable
 } from 'chart.js'
-
-/**
- * Used as an alias.
- *
- * @type {CC}
- */
-type CC = ChartConfiguration
+import { CC } from './index'
 
 /**
  * Used as the interface for the types hook.
@@ -30,7 +26,7 @@ export interface DatasetHook extends ChartDataSets {
     type: ChartType | string
 }
 
-export class Hooks extends BaseHooks<ChartConfiguration> {
+export class Hooks extends BaseHooks<CC> {
     /**
      * Used to set the color color of a dataset.
      *
@@ -38,7 +34,13 @@ export class Hooks extends BaseHooks<ChartConfiguration> {
      * @returns {this}
      * @memberof Hooks
      */
-    colors(colors = colorPalette): this {
+    colors(
+        colors: (
+            | ChartColor
+            | ChartColor[]
+            | Scriptable<ChartColor>
+        )[] = colorPalette
+    ): this {
         this.hooks.push(function(chart: CC): CC {
             if (chart.data?.datasets)
                 chart.data.datasets = chart.data.datasets.map(
@@ -158,19 +160,19 @@ export class Hooks extends BaseHooks<ChartConfiguration> {
         types: ChartType | (ChartType | DatasetHook)[],
         general = 'bar'
     ): this {
-        const t = Array.isArray(types)
-            ? types.map(e => (typeof e === 'string' ? { type: e } : e))
-            : [{ type: types }]
         this.hooks.push(function(chart: CC): CC {
-            chart.type = general
-            chart.data?.datasets
-            if (chart.data?.datasets)
+            chart.type = typeof types === 'string' ? types : general
+            if (Array.isArray(types) && chart.data?.datasets) {
+                const t = types.map(e =>
+                    typeof e === 'string' ? { type: e } : e
+                )
                 chart.data.datasets = chart.data.datasets.map(
                     (dataset, index) => ({
                         ...dataset,
                         ...t[index % t.length]
                     })
                 )
+            }
             return chart
         })
         return this

@@ -1,5 +1,4 @@
 import { Hooks } from './hooks';
-import '@chartisan/chartisan/style.css';
 import Chart, { ChartConfiguration, ChartUpdateProps } from 'chart.js';
 import { isHook, ServerData, isChartisan, Chartisan as Base } from '@chartisan/chartisan';
 export { Hooks as ChartisanHooks };
