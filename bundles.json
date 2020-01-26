@@ -1,19 +1,7 @@
 [
     {
         "input": "src/index.ts",
-        "output": "dist/chartisan_chartjs_locales.js"
-    },
-    {
-        "input": "src/index.ts",
         "output": "dist/chartisan_chartjs.js",
-        "external": ["moment"],
-        "globals": {
-            "moment": "moment"
-        }
-    },
-    {
-        "input": "src/index.ts",
-        "output": "dist/chartisan_chartjs_solo.js",
         "external": ["chart.js"],
         "globals": {
             "chart.js": "Chart"

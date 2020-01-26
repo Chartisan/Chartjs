@@ -40,6 +40,7 @@
                 Copyright &copy; 2020 &mdash; Èrik Campobadal Forés
             </div>
         </div>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script src="./dist/chartisan_chartjs.js"></script>
         <script>
             const chart1 = new Chartisan({
@@ -86,7 +87,6 @@
                     .tooltip(true)
                     .datasets('bar')
             })
-            console.log(chart2.legend())
             function update1() {
                 // chart1.update()
                 chart1.update({ background: true })

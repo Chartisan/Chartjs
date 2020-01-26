@@ -37,7 +37,9 @@
         "typedoc": "^0.16.5"
     },
     "dependencies": {
-        "@chartisan/chartisan": "file:../chartisan",
+        "@chartisan/chartisan": "file:../chartisan"
+    },
+    "peerDependencies": {
         "chart.js": "^2.9.3"
     }
 }
