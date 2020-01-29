@@ -1,19 +1,14 @@
+import { colorPalette, Hooks as BaseHooks } from '@chartisan/chartisan'
 import {
-    colorPalette,
-    mergeOptions,
-    Hooks as BaseHooks
-} from '@chartisan/chartisan'
-import {
-    Chart,
     ChartType,
+    Scriptable,
+    ChartColor,
     ChartDataSets,
     ChartTitleOptions,
     ChartLegendOptions,
     ChartTooltipOptions,
     ChartAnimationOptions,
-    ChartLayoutPaddingObject,
-    ChartColor,
-    Scriptable
+    ChartLayoutPaddingObject
 } from 'chart.js'
 import { CC } from './index'
 
@@ -43,7 +38,7 @@ export class Hooks extends BaseHooks<CC> {
             | Scriptable<ChartColor>
         )[] = colorPalette
     ): this {
-        this.hooks.push(function(chart: CC): CC {
+        return this.custom(function(chart) {
             if (chart.data?.datasets)
                 chart.data.datasets = chart.data.datasets.map(
                     (dataset, index) => ({
@@ -54,7 +49,6 @@ export class Hooks extends BaseHooks<CC> {
                 )
             return chart
         })
-        return this
     }
 
     /**
@@ -65,12 +59,7 @@ export class Hooks extends BaseHooks<CC> {
      * @memberof Hooks
      */
     responsive(value = true): this {
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { maintainAspectRatio: !value }
-            })
-        })
-        return this
+        return this.options({ options: { maintainAspectRatio: !value } })
     }
 
     /**
@@ -83,12 +72,7 @@ export class Hooks extends BaseHooks<CC> {
      */
     legend(legend: boolean | ChartLegendOptions = {}): this {
         if (typeof legend === 'boolean') legend = { display: legend }
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { legend }
-            })
-        })
-        return this
+        return this.options({ options: { legend } })
     }
 
     /**
@@ -100,21 +84,15 @@ export class Hooks extends BaseHooks<CC> {
      * @memberof Hooks
      */
     displayAxes(display = true, strict = false): this {
-        this.hooks.push(function(chart: CC): CC {
-            if (strict)
-                return mergeOptions(chart, {
-                    options: { scale: { display } }
-                })
-            return mergeOptions(chart, {
-                options: {
-                    scales: {
-                        xAxes: [{ display }],
-                        yAxes: [{ display }]
-                    }
-                }
-            })
-        })
-        return this
+        return this.options(
+            strict
+                ? { options: { scale: { display } } }
+                : {
+                      options: {
+                          scales: { xAxes: [{ display }], yAxes: [{ display }] }
+                      }
+                  }
+        )
     }
 
     /**
@@ -126,8 +104,7 @@ export class Hooks extends BaseHooks<CC> {
      */
     minimalist(value = true): this {
         this.legend({ display: !value })
-        this.displayAxes(!value)
-        return this
+        return this.displayAxes(!value)
     }
 
     /**
@@ -138,12 +115,7 @@ export class Hooks extends BaseHooks<CC> {
      * @memberof Hooks
      */
     padding(padding: number | ChartLayoutPaddingObject = 5): this {
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { layout: { padding } }
-            })
-        })
-        return this
+        return this.options({ options: { layout: { padding } } })
     }
 
     /**
@@ -162,7 +134,7 @@ export class Hooks extends BaseHooks<CC> {
         types: ChartType | (ChartType | DatasetHook)[],
         general = 'bar'
     ): this {
-        this.hooks.push(function(chart: CC): CC {
+        return this.custom(function(chart) {
             chart.type = typeof types === 'string' ? types : general
             if (Array.isArray(types) && chart.data?.datasets) {
                 const t = types.map(e =>
@@ -177,7 +149,6 @@ export class Hooks extends BaseHooks<CC> {
             }
             return chart
         })
-        return this
     }
 
     /**
@@ -188,16 +159,14 @@ export class Hooks extends BaseHooks<CC> {
      * @memberof Hooks
      */
     title(title: string | ChartTitleOptions = {}): this {
-        title =
-            typeof title === 'string'
-                ? { text: title, display: true }
-                : { display: true, ...title }
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { title }
-            })
+        return this.options({
+            options: {
+                title:
+                    typeof title === 'string'
+                        ? { text: title, display: true }
+                        : { display: true, ...title }
+            }
         })
-        return this
     }
 
     /**
@@ -208,12 +177,9 @@ export class Hooks extends BaseHooks<CC> {
      * @memberof Hooks
      */
     beginAtZero(beginAtZero = true): this {
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { scales: { yAxes: [{ ticks: { beginAtZero } }] } }
-            })
+        return this.options({
+            options: { scales: { yAxes: [{ ticks: { beginAtZero } }] } }
         })
-        return this
     }
 
     /**
@@ -225,12 +191,7 @@ export class Hooks extends BaseHooks<CC> {
      */
     tooltip(tooltips: boolean | ChartTooltipOptions): this {
         if (typeof tooltips === 'boolean') tooltips = { enabled: tooltips }
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { tooltips }
-            })
-        })
-        return this
+        return this.options({ options: { tooltips } })
     }
 
     /**
@@ -245,12 +206,7 @@ export class Hooks extends BaseHooks<CC> {
      * @memberof Hooks
      */
     legendCallback(legendCallback: (chart: Chart) => string): this {
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { legendCallback }
-            })
-        })
-        return this
+        return this.options({ options: { legendCallback } })
     }
 
     /**
@@ -261,11 +217,6 @@ export class Hooks extends BaseHooks<CC> {
      * @memberof Hooks
      */
     animation(animation: ChartAnimationOptions): this {
-        this.hooks.push(function(chart: CC): CC {
-            return mergeOptions(chart, {
-                options: { animation }
-            })
-        })
-        return this
+        return this.options({ options: { animation } })
     }
 }

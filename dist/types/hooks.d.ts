@@ -1,5 +1,5 @@
 import { Hooks as BaseHooks } from '@chartisan/chartisan';
-import { ChartType, ChartDataSets, ChartTitleOptions, ChartLegendOptions, ChartTooltipOptions, ChartAnimationOptions, ChartLayoutPaddingObject, ChartColor, Scriptable } from 'chart.js';
+import { ChartType, Scriptable, ChartColor, ChartDataSets, ChartTitleOptions, ChartLegendOptions, ChartTooltipOptions, ChartAnimationOptions, ChartLayoutPaddingObject } from 'chart.js';
 import { CC } from './index';
 /**
  * Used as the interface for the types hook.
