@@ -3,17 +3,13 @@
         "input": "src/index.ts",
         "output": "dist/chartisan_chartjs.js",
         "external": ["chart.js"],
-        "globals": {
-            "chart.js": "Chart"
-        }
+        "globals": { "chart.js": "Chart" }
     },
     {
         "input": "src/index.ts",
         "output": "dist/chartisan_chartjs.es.js",
         "format": "es",
         "external": ["chart.js"],
-        "globals": {
-            "chart.js": "Chart"
-        }
+        "globals": { "chart.js": "Chart" }
     }
 ]
