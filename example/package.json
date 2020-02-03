@@ -1,6 +1,7 @@
 {
     "name": "example",
     "version": "1.0.0",
+    "private": true,
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -15,7 +16,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@chartisan/chartjs": "file:..",
+        "@chartisan/chartjs": "^1.0.0",
         "chart.js": "^2.9.3"
     },
     "devDependencies": {

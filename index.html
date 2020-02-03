@@ -58,24 +58,11 @@
                 el: '#chart2',
                 data: {
                     chart: {
-                        labels: ['a', 'b', 'c'],
-                        extra: null
+                        labels: ['a', 'b', 'c']
                     },
                     datasets: [
-                        {
-                            id: 1,
-                            name: 'Sample 1',
-                            values: [10, 3, 7],
-                            isDatetime: false,
-                            extra: null
-                        },
-                        {
-                            id: 2,
-                            name: 'Sample 2',
-                            values: [1, 6, 2],
-                            isDatetime: false,
-                            extra: null
-                        }
+                        { name: 'Sample 1', values: [10, 3, 7] },
+                        { name: 'Sample 2', values: [1, 6, 2] }
                     ]
                 },
                 hooks: new ChartisanHooks()

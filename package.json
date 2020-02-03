@@ -1,10 +1,11 @@
 {
     "name": "@chartisan/chartjs",
-    "description": "Chartisan's Chart.js frontend.",
-    "version": "0.1.0",
+    "description": "Chartisan's Chart.js frontend",
+    "version": "1.0.0",
     "author": "Èrik Campobadal Forés <soc@erik.cat>",
     "license": "MIT",
     "main": "dist/chartisan_chartjs.js",
+    "module": "dist/chartisan_chartjs.es.js",
     "source": "src/index.ts",
     "types": "dist/index.d.ts",
     "repository": {
@@ -16,7 +17,8 @@
         "watch": "ultrabundle --watch",
         "prod": "ultrabundle --optimize",
         "docs": "typedoc src",
-        "release": "npm run prod && npm run docs"
+        "release": "npm run prod && npm run docs",
+        "publish": "npm run release && npm publish --access public"
     },
     "files": [
         "dist"
@@ -33,11 +35,11 @@
     "devDependencies": {
         "@types/chart.js": "^2.9.5",
         "typescript": "^3.7.3",
-        "ultrabundle": "^0.1.0",
+        "ultrabundle": "^1.0.2",
         "typedoc": "^0.16.5"
     },
     "dependencies": {
-        "@chartisan/chartisan": "file:../chartisan"
+        "@chartisan/chartisan": "^1.0.7"
     },
     "peerDependencies": {
         "chart.js": "^2.9.3"
