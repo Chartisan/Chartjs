@@ -159,7 +159,7 @@ export class Chartisan extends Base<CC> {
                 )
             }
             this.chart.update(options)
-        }
+        } else this.onUpdate(data)
     }
 
     /**

@@ -1,7 +1,7 @@
 {
     "name": "@chartisan/chartjs",
     "description": "Chartisan's Chart.js frontend",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Èrik Campobadal Forés <soc@erik.cat>",
     "license": "MIT",
     "main": "dist/chartisan_chartjs.js",
@@ -24,6 +24,8 @@
         "dist"
     ],
     "keywords": [
+        "Chartjs",
+        "Chart.js",
         "Chart",
         "Charts",
         "Chartisan",
