@@ -21,7 +21,8 @@
         "publish": "npm run release && npm publish --access public"
     },
     "files": [
-        "dist"
+        "dist",
+        "dist/index.d.ts"
     ],
     "keywords": [
         "Chartjs",
