@@ -163,6 +163,15 @@ export class Chartisan extends Base<CC> {
     }
 
     /**
+     * Destroys the chart instance if any.
+     *
+     * @memberof Chartisan
+     */
+    protected destroy() {
+        if (this.chart) this.chart.destroy()
+    }
+
+    /**
      * This returns a base 64 encoded string of the
      * chart in it's current state.
      *

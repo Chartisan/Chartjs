@@ -15,25 +15,10 @@ const chart1 = new Chartisan({
 const chart2 = new Chartisan({
     el: '#chart2',
     data: {
-        chart: {
-            labels: ['a', 'b', 'c'],
-            extra: null
-        },
+        chart: { labels: ['a', 'b', 'c'] },
         datasets: [
-            {
-                id: 1,
-                name: 'Sample 1',
-                values: [1, 2, 3],
-                isDatetime: false,
-                extra: null
-            },
-            {
-                id: 2,
-                name: 'Sample 2',
-                values: [3, 2, 1],
-                isDatetime: false,
-                extra: null
-            }
+            { name: 'Sample 1', values: [1, 2, 3] },
+            { name: 'Sample 2', values: [3, 2, 1] }
         ]
     },
     hooks: new ChartisanHooks()

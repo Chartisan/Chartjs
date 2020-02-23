@@ -38,16 +38,16 @@ export class Hooks extends BaseHooks<CC> {
             | Scriptable<ChartColor>
         )[] = colorPalette
     ): this {
-        return this.custom(function(chart) {
-            if (chart.data?.datasets)
-                chart.data.datasets = chart.data.datasets.map(
+        return this.custom(({ data }) => {
+            if (data.data?.datasets)
+                data.data.datasets = data.data.datasets.map(
                     (dataset, index) => ({
                         ...dataset,
                         borderColor: colors[index % colors.length],
                         backgroundColor: colors[index % colors.length]
                     })
                 )
-            return chart
+            return data
         })
     }
 
@@ -134,20 +134,20 @@ export class Hooks extends BaseHooks<CC> {
         types: ChartType | (ChartType | DatasetHook)[],
         general = 'bar'
     ): this {
-        return this.custom(function(chart) {
-            chart.type = typeof types === 'string' ? types : general
-            if (Array.isArray(types) && chart.data?.datasets) {
+        return this.custom(({ data }) => {
+            data.type = typeof types === 'string' ? types : general
+            if (Array.isArray(types) && data.data?.datasets) {
                 const t = types.map(e =>
                     typeof e === 'string' ? { type: e } : e
                 )
-                chart.data.datasets = chart.data.datasets.map(
+                data.data.datasets = data.data.datasets.map(
                     (dataset, index) => ({
                         ...dataset,
                         ...t[index % t.length]
                     })
                 )
             }
-            return chart
+            return data
         })
     }
 

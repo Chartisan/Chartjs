@@ -16,7 +16,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@chartisan/chartjs": "^1.0.0",
+        "@chartisan/chartjs": "^2.0.0",
         "chart.js": "^2.9.3"
     },
     "devDependencies": {

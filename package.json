@@ -1,7 +1,7 @@
 {
     "name": "@chartisan/chartjs",
     "description": "Chartisan's Chart.js frontend",
-    "version": "1.1.1",
+    "version": "2.0.0",
     "author": "Èrik Campobadal Forés <soc@erik.cat>",
     "license": "MIT",
     "main": "dist/chartisan_chartjs.js",
@@ -41,7 +41,7 @@
         "typedoc": "^0.16.5"
     },
     "dependencies": {
-        "@chartisan/chartisan": "^1.1.0"
+        "@chartisan/chartisan": "^2.0.0"
     },
     "peerDependencies": {
         "chart.js": "^2.9.3"
