@@ -1,49 +1,49 @@
 {
-    "name": "@chartisan/chartjs",
-    "description": "Chartisan's Chart.js frontend",
-    "version": "2.0.2",
-    "author": "Èrik Campobadal Forés <soc@erik.cat>",
-    "license": "MIT",
-    "main": "dist/chartisan_chartjs.js",
-    "module": "dist/chartisan_chartjs.es.js",
-    "source": "src/index.ts",
-    "types": "dist/types/index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/chartisan/chartjs.git"
-    },
-    "scripts": {
-        "dev": "ultrabundle",
-        "watch": "ultrabundle --watch",
-        "prod": "ultrabundle --optimize",
-        "docs": "typedoc src",
-        "release": "npm run prod && npm run docs"
-    },
-    "files": [
-        "dist",
-        "dist/types/index.d.ts"
-    ],
-    "keywords": [
-        "Chartjs",
-        "Chart.js",
-        "Chart",
-        "Charts",
-        "Chartisan",
-        "Plot",
-        "Plots",
-        "Graphic",
-        "Graphics"
-    ],
-    "devDependencies": {
-        "@types/chart.js": "^2.9.5",
-        "typescript": "^3.7.3",
-        "ultrabundle": "^1.0.2",
-        "typedoc": "^0.16.5"
-    },
-    "dependencies": {
-        "@chartisan/chartisan": "^2.0.1"
-    },
-    "peerDependencies": {
-        "chart.js": "^2.9.3"
-    }
+  "name": "@chartisan/chartjs",
+  "description": "Chartisan's Chart.js frontend",
+  "version": "2.0.3",
+  "author": "Èrik Campobadal Forés <soc@erik.cat>",
+  "license": "MIT",
+  "main": "dist/chartisan_chartjs.js",
+  "module": "dist/chartisan_chartjs.es.js",
+  "source": "src/index.ts",
+  "types": "dist/types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chartisan/chartjs.git"
+  },
+  "scripts": {
+    "dev": "ultrabundle",
+    "watch": "ultrabundle --watch",
+    "prod": "ultrabundle --optimize",
+    "docs": "typedoc src",
+    "release": "npm run prod && npm run docs"
+  },
+  "files": [
+    "dist",
+    "dist/types/index.d.ts"
+  ],
+  "keywords": [
+    "Chartjs",
+    "Chart.js",
+    "Chart",
+    "Charts",
+    "Chartisan",
+    "Plot",
+    "Plots",
+    "Graphic",
+    "Graphics"
+  ],
+  "devDependencies": {
+    "@types/chart.js": "^2.9.5",
+    "typescript": "^3.7.3",
+    "ultrabundle": "^1.0.2",
+    "typedoc": "^0.16.5"
+  },
+  "dependencies": {
+    "@chartisan/chartisan": "^3.0.5"
+  },
+  "peerDependencies": {
+    "chart.js": "^2.9.3"
+  }
 }
