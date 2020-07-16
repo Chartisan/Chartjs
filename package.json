@@ -1,23 +1,27 @@
 {
   "name": "@chartisan/chartjs",
   "description": "Chartisan's Chart.js frontend",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "author": "Èrik Campobadal Forés <soc@erik.cat>",
   "license": "MIT",
-  "main": "dist/chartisan_chartjs.js",
-  "module": "dist/chartisan_chartjs.es.js",
   "source": "src/index.ts",
+  "main": "dist/chartisan_chartjs.js",
+  "module": "dist/chartisan_chartjs.module.js",
+  "esmodule": "dist/chartisan_chartjs.modern.js",
+  "unpkg": "dist/chartisan_chartjs.umd.js",
   "types": "dist/types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chartisan/chartjs.git"
   },
   "scripts": {
-    "dev": "ultrabundle",
-    "watch": "ultrabundle --watch",
-    "prod": "ultrabundle --optimize",
+    "dev": "microbundle --no-compress",
+    "watch": "microbundle --no-compress --watch",
+    "prod": "microbundle --format modern,es,cjs --compress",
+    "build:umd": "microbundle --compress --format umd --external peerDependencies --globals chart.js=Chart",
     "docs": "typedoc src",
-    "release": "npm run prod && npm run docs"
+    "build": "npm run prod && npm run build:umd",
+    "prepare": "npm run build"
   },
   "files": [
     "dist",
@@ -35,13 +39,19 @@
     "Graphics"
   ],
   "devDependencies": {
-    "@types/chart.js": "^2.9.5",
-    "typescript": "^3.7.3",
-    "ultrabundle": "^1.0.2",
-    "typedoc": "^0.16.5"
+    "@babel/core": "^7.10.4",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.10.4",
+    "@babel/plugin-transform-typescript": "^7.10.4",
+    "@types/chart.js": "^2.9.22",
+    "install-peers-cli": "^2.2.0",
+    "microbundle": "^0.12.2",
+    "typedoc": "^0.16.11",
+    "typescript": "^3.9.6"
   },
   "dependencies": {
-    "@chartisan/chartisan": "^3.0.5"
+    "@chartisan/chartisan": "^3.2.3"
   },
   "peerDependencies": {
     "chart.js": "^2.9.3"

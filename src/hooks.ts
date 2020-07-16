@@ -28,9 +28,59 @@ export class Hooks extends BaseHooks<CC> {
       if (data.data?.datasets)
         data.data.datasets = data.data.datasets.map((dataset, index) => ({
           ...dataset,
-          borderColor: colors[index % colors.length],
           backgroundColor: colors[index % colors.length],
         }))
+      return data
+    })
+  }
+
+  /**
+   * Set the pie border colors of the datasets.
+   */
+  borderColors(colors: (ChartColor | ChartColor[] | Scriptable<ChartColor>)[] = colorPalette): this {
+    return this.custom(({ data }) => {
+      if (data.data?.datasets)
+        data.data.datasets = data.data.datasets.map((dataset, index) => ({
+          ...dataset,
+          borderColor: colors[index % colors.length],
+        }))
+      return data
+    })
+  }
+
+  /**
+   * Set the pie colors of the datasets.
+   */
+  pieColors(colors: ChartColor[] = colorPalette): this {
+    return this.custom(({ data }) => {
+      if (data.data?.datasets) {
+        data.data.datasets = data.data.datasets.map((dataset, _, array) => {
+          const d = new Array(dataset.data?.length ?? array?.length).fill('')
+          return {
+            ...dataset,
+            // borderColor: d.map((_, i) => colors[i % colors.length]),
+            backgroundColor: d.map((_, i) => colors[i % colors.length]),
+          }
+        })
+      }
+      return data
+    })
+  }
+
+  /**
+   * Set the pie border colors of the datasets.
+   */
+  pieBorderColors(colors: ChartColor[] = colorPalette): this {
+    return this.custom(({ data }) => {
+      if (data.data?.datasets) {
+        data.data.datasets = data.data.datasets.map((dataset, _, array) => {
+          const d = new Array(dataset.data?.length ?? array?.length).fill('')
+          return {
+            ...dataset,
+            borderColor: d.map((_, i) => colors[i % colors.length]),
+          }
+        })
+      }
       return data
     })
   }
@@ -116,9 +166,27 @@ export class Hooks extends BaseHooks<CC> {
   /**
    * Set the chart to begin at zero.
    */
-  beginAtZero(beginAtZero = true): this {
+  beginAtZero(beginAtZero = true, axe: 'x' | 'y' = 'y'): this {
     return this.options({
-      options: { scales: { yAxes: [{ ticks: { beginAtZero } }] } },
+      options: { scales: { [`${axe}Axes`]: [{ ticks: { beginAtZero } }] } },
+    })
+  }
+
+  /**
+   * Set the chart to begin at zero.
+   */
+  precision(precision: number, axe: 'x' | 'y' = 'y'): this {
+    return this.options({
+      options: { scales: { [`${axe}Axes`]: [{ ticks: { precision } }] } },
+    })
+  }
+
+  /**
+   * Set the chart to begin at zero.
+   */
+  stepSize(stepSize: number, axe: 'x' | 'y' = 'y'): this {
+    return this.options({
+      options: { scales: { [`${axe}Axes`]: [{ ticks: { stepSize } }] } },
     })
   }
 

@@ -104,7 +104,7 @@ export class Chartisan extends Base<CC> {
       // try beeing smarter here.
       if (this.chart.data.datasets && data.data?.datasets) {
         Chartisan.mutateArray(this.chart.data.datasets, data.data.datasets, (dest, src, i) => {
-          Chartisan.mutateArray<(number | null | undefined) | Chart.ChartPoint>(dest[i].data!, src[i].data!)
+          Chartisan.mutateArray<(number | number[] | null | undefined) | Chart.ChartPoint>(dest[i].data!, src[i].data!)
         })
       }
       this.chart.update(options)
